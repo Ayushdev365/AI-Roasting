@@ -1,0 +1,8 @@
+streamlit>=1.32.0
+opencv-python>=4.9.0.80
+deepface>=0.0.93
+tf-keras>=2.16.0
+Pillow>=10.2.0
+numpy>=1.24.0
+gtts>=2.5.1
+edge-tts>=6.1.13

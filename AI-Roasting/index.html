@@ -1,0 +1,1484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AI Mirror 🪞 Hinglish Roast Edition</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+/* ── RESET & ROOT ─────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:     #07070f;
+  --card:   rgba(255,255,255,.035);
+  --border: rgba(255,255,255,.07);
+  --text:   #f2f0ec;
+  --muted:  #3a3a55;
+  --dim:    #555;
+  --orange: #ff6b35;
+  --pink:   #ff006e;
+  --purple: #8338ec;
+  --blue:   #3a86ff;
+  --green:  #22c55e;
+  --red:    #ff4444;
+}
+
+html, body {
+  min-height: 100vh;
+  background: var(--bg);
+  background-image:
+    radial-gradient(ellipse at 0% 0%,   #1e0b38 0%, transparent 55%),
+    radial-gradient(ellipse at 100% 100%, #0a1535 0%, transparent 55%);
+  color: var(--text);
+  font-family: 'Space Grotesk', sans-serif;
+  overflow-x: hidden;
+}
+
+/* Scanline texture overlay */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background: repeating-linear-gradient(
+    0deg, transparent, transparent 2px,
+    rgba(0,0,0,.03) 2px, rgba(0,0,0,.03) 4px
+  );
+  pointer-events: none; z-index: 0;
+}
+
+/* ── HEADER ──────────────────────────────────────────── */
+header {
+  text-align: center;
+  padding: 2.5rem 1rem 1rem;
+  position: relative; z-index: 1;
+}
+
+.logo {
+  font-size: clamp(2.8rem, 8vw, 5rem);
+  font-weight: 800;
+  letter-spacing: -.03em;
+  background: linear-gradient(135deg, var(--orange) 0%, var(--pink) 35%, var(--purple) 65%, var(--blue) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+  filter: drop-shadow(0 0 40px rgba(131,56,236,.25));
+}
+
+.tagline {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .7rem;
+  color: #2e2e45;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  margin-top: .45rem;
+}
+
+/* ── MAIN GRID ───────────────────────────────────────── */
+.grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 1.8rem;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1.5rem 3rem;
+  position: relative; z-index: 1;
+}
+
+@media (max-width: 800px) {
+  .grid { grid-template-columns: 1fr; }
+}
+
+/* ── STATUS BAR ──────────────────────────────────────── */
+.status-bar {
+  display: flex; align-items: center; gap: .5rem;
+  margin-bottom: .7rem;
+}
+
+.status-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--green); box-shadow: 0 0 8px var(--green);
+  animation: pulse 2s infinite;
+}
+
+.status-dot.red { background: var(--red); box-shadow: 0 0 8px var(--red); }
+
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .2; } }
+
+.status-txt {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .65rem; color: var(--dim);
+  text-transform: uppercase; letter-spacing: .1em;
+}
+
+/* ── CAM FRAME ───────────────────────────────────────── */
+.cam-frame {
+  position: relative;
+  border-radius: 20px; overflow: hidden;
+  border: 1.5px solid rgba(131,56,236,.2);
+  background: #0a0914;
+  box-shadow: 0 0 80px rgba(131,56,236,.1), inset 0 0 40px rgba(0,0,0,.3);
+  aspect-ratio: 4/3;
+}
+
+#video {
+  width: 100%; height: 100%;
+  object-fit: cover; display: block;
+  transform: scaleX(-1);
+  border-radius: 18px;
+}
+
+#overlay-canvas {
+  position: absolute; top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none; border-radius: 18px;
+}
+
+.cam-empty {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: .8rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .8rem; color: #252535;
+  text-align: center; padding: 1rem;
+}
+
+.cam-empty .cam-icon { font-size: 3rem; }
+
+/* Corner bracket decorations */
+.corner {
+  position: absolute;
+  width: 20px; height: 20px;
+  border-color: rgba(131,56,236,.35);
+  border-style: solid;
+}
+
+.corner-tl { top: 10px; left: 10px;  border-width: 2px 0 0 2px; border-radius: 4px 0 0 0; }
+.corner-tr { top: 10px; right: 10px; border-width: 2px 2px 0 0; border-radius: 0 4px 0 0; }
+.corner-bl { bottom: 10px; left: 10px;  border-width: 0 0 2px 2px; border-radius: 0 0 0 4px; }
+.corner-br { bottom: 10px; right: 10px; border-width: 0 2px 2px 0; border-radius: 0 0 4px 0; }
+
+/* Mode pill overlay on video */
+.mode-pill {
+  position: absolute; top: 14px; left: 50%; transform: translateX(-50%);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .63rem; font-weight: 500;
+  padding: .25rem .8rem; border-radius: 100px;
+  letter-spacing: .08em; text-transform: uppercase;
+  pointer-events: none;
+}
+
+.mode-pill.roast {
+  background: rgba(255,107,53,.2); color: #ff8c42;
+  border: 1px solid rgba(255,107,53,.3);
+}
+
+.mode-pill.boost {
+  background: rgba(131,56,236,.2); color: #a855f7;
+  border: 1px solid rgba(131,56,236,.3);
+}
+
+/* ── CONTROLS ────────────────────────────────────────── */
+.controls { margin-top: 1rem; display: flex; flex-direction: column; gap: .7rem; }
+
+.mode-btns { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; }
+
+.btn {
+  padding: .7rem 1.2rem; border-radius: 12px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700; font-size: .9rem;
+  cursor: pointer; transition: all .18s ease;
+  letter-spacing: .02em;
+  border: 1.5px solid rgba(255,255,255,.1);
+  background: rgba(255,255,255,.04); color: #888;
+}
+
+.btn:hover { transform: translateY(-2px); }
+
+.btn.active-roast {
+  background: linear-gradient(135deg, #ff4444, #ff8c00);
+  color: #fff; border-color: transparent;
+  box-shadow: 0 4px 20px rgba(255,68,68,.3);
+}
+
+.btn.active-boost {
+  background: linear-gradient(135deg, #8338ec, #3a86ff);
+  color: #fff; border-color: transparent;
+  box-shadow: 0 4px 20px rgba(131,56,236,.35);
+}
+
+.capture-btn {
+  padding: .85rem; border-radius: 14px; border: none;
+  background: linear-gradient(135deg, var(--purple), var(--pink));
+  color: #fff;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 800; font-size: 1rem;
+  cursor: pointer; transition: all .2s ease;
+  letter-spacing: .03em;
+  box-shadow: 0 4px 30px rgba(131,56,236,.35);
+}
+
+.capture-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 40px rgba(131,56,236,.5); }
+.capture-btn:active { transform: translateY(0); }
+.capture-btn:disabled { opacity: .4; cursor: not-allowed; transform: none; }
+
+/* Toggles row */
+.toggle-row { display: flex; gap: 1.5rem; align-items: center; flex-wrap: wrap; }
+
+.toggle-wrap { display: flex; align-items: center; gap: .5rem; cursor: pointer; }
+
+input[type="checkbox"] {
+  appearance: none;
+  width: 38px; height: 22px; border-radius: 100px;
+  background: rgba(255,255,255,.1);
+  border: 1px solid rgba(255,255,255,.1);
+  cursor: pointer; position: relative; transition: .25s;
+}
+
+input[type="checkbox"]::before {
+  content: '';
+  position: absolute;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: #666; top: 2px; left: 2px; transition: .25s;
+}
+
+input[type="checkbox"]:checked {
+  background: linear-gradient(135deg, #8338ec, #ff006e);
+  border-color: transparent;
+}
+
+input[type="checkbox"]:checked::before {
+  transform: translateX(16px); background: #fff;
+}
+
+.toggle-lbl {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .65rem; color: var(--dim);
+  text-transform: uppercase; letter-spacing: .08em;
+}
+
+/* ── DIVIDER ─────────────────────────────────────────── */
+.divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(131,56,236,.3), transparent);
+  margin: .9rem 0;
+}
+
+/* ── SCORE CARDS ─────────────────────────────────────── */
+.score-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: .5rem; }
+
+.score-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 12px; padding: .65rem .8rem; text-align: center;
+}
+
+.score-num {
+  font-size: 1.9rem; font-weight: 800;
+  background: linear-gradient(135deg, #8338ec, #ff006e);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-variant-numeric: tabular-nums;
+}
+
+.score-lbl {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .58rem; color: var(--muted);
+  text-transform: uppercase; letter-spacing: .08em; margin-top: .1rem;
+}
+
+/* ── RIGHT PANEL ─────────────────────────────────────── */
+.section-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .63rem; color: var(--muted);
+  text-transform: uppercase; letter-spacing: .12em;
+  margin-bottom: .55rem;
+}
+
+/* ── EMOTION CARD ────────────────────────────────────── */
+.emo-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 18px; padding: 1.1rem 1.4rem; text-align: center;
+}
+
+.emo-icon  { font-size: 3.8rem; line-height: 1; margin-bottom: .2rem; }
+.emo-sub   { font-family: 'JetBrains Mono', monospace; font-size: .6rem; color: var(--dim);
+             text-transform: uppercase; letter-spacing: .12em; }
+.emo-name  { font-size: 1.3rem; font-weight: 700; color: var(--text); margin-top: .1rem; }
+
+.conf-hdr { font-family: 'JetBrains Mono', monospace; font-size: .6rem; color: var(--muted);
+            text-align: left; margin-top: .75rem; margin-bottom: .3rem;
+            text-transform: uppercase; letter-spacing: .08em; }
+
+.conf-track { background: rgba(255,255,255,.06); border-radius: 8px; height: 6px; overflow: hidden; }
+
+.conf-fill {
+  height: 100%; border-radius: 8px;
+  background: linear-gradient(90deg, #8338ec, #ff006e);
+  transition: width .7s cubic-bezier(.4,0,.2,1);
+  width: 0%;
+}
+
+/* ── RESPONSE CARD ───────────────────────────────────── */
+.resp-card {
+  border-radius: 20px; padding: 1.35rem 1.6rem; margin-top: .8rem;
+  display: flex; align-items: flex-start; gap: .9rem;
+  min-height: 105px;
+}
+
+.resp-card.roast {
+  background: linear-gradient(135deg, rgba(255,107,53,.1), rgba(255,0,110,.06));
+  border: 1px solid rgba(255,80,80,.18);
+  opacity: 1;
+}
+
+.resp-card.boost {
+  background: linear-gradient(135deg, rgba(131,56,236,.1), rgba(58,134,255,.06));
+  border: 1px solid rgba(131,56,236,.18);
+  opacity: 1;
+}
+
+.resp-card.idle {
+  background: rgba(255,255,255,.02);
+  border: 1px solid var(--border);
+  opacity: .35;
+}
+
+.resp-card.loading {
+  background: rgba(255,255,255,.03);
+  border: 1px solid var(--border);
+  align-items: center; justify-content: center;
+}
+
+.resp-icon { font-size: 2rem; flex-shrink: 0; margin-top: .15rem; }
+.resp-text { font-size: clamp(.9rem, 1.7vw, 1.1rem); font-weight: 600; line-height: 1.65; color: var(--text); }
+
+/* Loading dots */
+.ldots { display: flex; gap: 8px; align-items: center; }
+
+.ldot {
+  width: 11px; height: 11px; border-radius: 50%;
+  animation: boing .9s infinite ease-in-out;
+}
+
+.ldot:nth-child(1) { background: var(--orange); }
+.ldot:nth-child(2) { background: var(--pink);   animation-delay: .15s; }
+.ldot:nth-child(3) { background: var(--purple);  animation-delay: .3s;  }
+
+@keyframes boing {
+  0%, 80%, 100% { transform: scale(.6); opacity: .25; }
+  40%            { transform: scale(1.4); opacity: 1;   }
+}
+
+/* ── VOICE BAR ───────────────────────────────────────── */
+.voice-bar {
+  display: none;
+  align-items: center; gap: .5rem;
+  background: rgba(131,56,236,.1);
+  border: 1px solid rgba(131,56,236,.2);
+  border-radius: 10px; padding: .4rem .8rem;
+  margin-top: .5rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .63rem; color: #7c5cbf;
+  text-transform: uppercase; letter-spacing: .08em;
+}
+
+.voice-bar.active { display: flex; }
+
+.vdot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: #8338ec; animation: boing .65s infinite;
+}
+
+.vdot:nth-child(2) { animation-delay: .1s; }
+.vdot:nth-child(3) { animation-delay: .2s; }
+
+/* ── LEADERBOARD ─────────────────────────────────────── */
+.lb-row {
+  display: flex; align-items: center; gap: .7rem;
+  padding: .45rem 0;
+  border-bottom: 1px solid rgba(255,255,255,.04);
+}
+
+.lb-rank { font-size: 1rem; font-weight: 800; color: var(--muted); width: 22px; }
+.lb-emo  { font-size: 1.1rem; }
+.lb-name { font-size: .85rem; font-weight: 600; flex: 1; }
+.lb-bar  { font-family: 'JetBrains Mono', monospace; font-size: .6rem; color: var(--purple); }
+
+/* ── HISTORY ─────────────────────────────────────────── */
+.hist-item {
+  background: rgba(255,255,255,.02);
+  border: 1px solid rgba(255,255,255,.05);
+  border-left: 2px solid rgba(131,56,236,.2);
+  border-radius: 12px; padding: .7rem .95rem;
+  margin-bottom: .5rem;
+  font-size: .82rem; line-height: 1.55; color: #777;
+  transition: border-left-color .2s;
+}
+
+.hist-item:hover { border-left-color: rgba(131,56,236,.5); }
+
+.hist-meta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .6rem; color: #2e2e45;
+  margin-bottom: .2rem;
+  text-transform: uppercase; letter-spacing: .08em;
+}
+
+.hist-empty {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .7rem; color: #1e1e2e;
+}
+
+/* ── VIRAL PANEL ─────────────────────────────────────── */
+.viral-panel {
+  background: rgba(255,255,255,.02);
+  border: 1px solid rgba(131,56,236,.12);
+  border-radius: 18px; padding: 1.1rem 1.4rem;
+  margin-top: .9rem;
+}
+
+.viral-title {
+  font-size: .95rem; font-weight: 700; color: var(--purple);
+  margin-bottom: .75rem; letter-spacing: .02em;
+}
+
+.viral-item {
+  display: flex; align-items: flex-start; gap: .6rem;
+  margin-bottom: .6rem;
+  font-size: .82rem; color: #666; line-height: 1.5;
+}
+
+.viral-item .vi-icon { font-size: 1rem; flex-shrink: 0; }
+
+.badge-pill {
+  display: inline-block; padding: .1rem .45rem;
+  border-radius: 6px; font-size: .55rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .06em;
+  vertical-align: middle; margin-left: .35rem;
+}
+
+.badge-soon { background: rgba(255,107,53,.15); color: #ff8c42; border: 1px solid rgba(255,107,53,.2); }
+.badge-live { background: rgba(34,197,94,.15);  color: #22c55e; border: 1px solid rgba(34,197,94,.2);  }
+
+/* ── SHARE CARD ──────────────────────────────────────── */
+#share-canvas { display: none; }
+
+.share-btn {
+  width: 100%; padding: .6rem; border-radius: 10px; border: none;
+  background: rgba(255,255,255,.06); color: #aaa;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600; font-size: .85rem;
+  cursor: pointer; transition: all .2s;
+  border: 1px solid rgba(255,255,255,.08);
+  margin-top: .5rem;
+}
+
+.share-btn:hover { background: rgba(255,255,255,.1); color: var(--text); }
+
+/* ── TOAST ───────────────────────────────────────────── */
+.toast {
+  position: fixed; bottom: 2rem; left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: rgba(131,56,236,.92);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 12px; padding: .65rem 1.4rem;
+  font-size: .88rem; font-weight: 600; color: #fff;
+  z-index: 999; transition: transform .4s cubic-bezier(.34,1.56,.64,1);
+  pointer-events: none;
+}
+
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ── FOOTER ──────────────────────────────────────────── */
+footer {
+  text-align: center; padding: 1.5rem 0 2.5rem;
+  border-top: 1px solid rgba(255,255,255,.04);
+  position: relative; z-index: 1;
+  margin-top: 1rem;
+}
+
+footer p {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .6rem; color: #1a1a2a;
+  letter-spacing: .12em; text-transform: uppercase;
+}
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">🪞 AI Mirror</div>
+  <div class="tagline">Hinglish Roast Edition · Emotion AI · Web Speech API · No Server Needed</div>
+</header>
+
+<!-- MAIN GRID -->
+<div class="grid">
+
+  <!-- ══════════ LEFT: CAMERA COLUMN ══════════ -->
+  <section>
+
+    <div class="status-bar">
+      <div class="status-dot" id="status-dot"></div>
+      <div class="status-txt" id="status-txt">Initialising camera…</div>
+    </div>
+
+    <!-- Camera Frame -->
+    <div class="cam-frame" id="cam-frame">
+      <div class="corner corner-tl"></div>
+      <div class="corner corner-tr"></div>
+      <div class="corner corner-bl"></div>
+      <div class="corner corner-br"></div>
+      <div class="cam-empty" id="cam-empty">
+        <div class="cam-icon">📷</div>
+        Click <strong>Allow</strong> when the browser asks for camera access.
+      </div>
+      <video id="video" autoplay playsinline muted></video>
+      <canvas id="overlay-canvas"></canvas>
+      <div class="mode-pill roast" id="mode-pill">🔥 Roast Mode</div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+      <div class="mode-btns">
+        <button class="btn active-roast" id="btn-roast" onclick="setMode('roast')">🔥 Roast Mode</button>
+        <button class="btn"             id="btn-boost" onclick="setMode('boost')">💖 Boost Mode</button>
+      </div>
+
+      <button class="capture-btn" id="capture-btn" onclick="capture()" disabled>
+        📸 Capture &amp; Analyse
+      </button>
+
+      <div class="toggle-row">
+        <label class="toggle-wrap">
+          <input type="checkbox" id="voice-toggle" checked>
+          <span class="toggle-lbl">🔊 Voice</span>
+        </label>
+        <label class="toggle-wrap">
+          <input type="checkbox" id="live-toggle" onchange="toggleLive(this.checked)">
+          <span class="toggle-lbl">📡 Live Preview</span>
+        </label>
+        <label class="toggle-wrap">
+          <input type="checkbox" id="hindi-toggle" checked>
+          <span class="toggle-lbl">🇮🇳 Hindi TTS</span>
+        </label>
+      </div>
+
+      <button class="share-btn" id="share-btn" onclick="shareCard()" style="display:none">
+        🃏 Generate Shareable Roast Card
+      </button>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Score Cards -->
+    <div class="score-row">
+      <div class="score-card">
+        <div class="score-num" id="sc-total">0</div>
+        <div class="score-lbl">Captures</div>
+      </div>
+      <div class="score-card">
+        <div class="score-num" id="sc-roasts">0</div>
+        <div class="score-lbl">Roasted</div>
+      </div>
+      <div class="score-card">
+        <div class="score-num" id="sc-boosts">0</div>
+        <div class="score-lbl">Boosted</div>
+      </div>
+    </div>
+
+    <!-- Viral Features Panel -->
+    <div class="viral-panel">
+      <div class="viral-title">🚀 Viral Features</div>
+
+      <div class="viral-item">
+        <span class="vi-icon">🎮</span>
+        <div><strong>Multiplayer Roast Battle</strong><span class="badge-pill badge-soon">Soon</span><br>
+        Two webcams, one screen — AI judges who gets roasted harder.</div>
+      </div>
+
+      <div class="viral-item">
+        <span class="vi-icon">🏆</span>
+        <div><strong>Emotion Leaderboard</strong><span class="badge-pill badge-live">Live</span><br>
+        Your emotion breakdown lives on the right panel.</div>
+      </div>
+
+      <div class="viral-item">
+        <span class="vi-icon">🃏</span>
+        <div><strong>Shareable Roast Card</strong><span class="badge-pill badge-live">Live</span><br>
+        Download your face + roast as a meme card!</div>
+      </div>
+
+      <div class="viral-item">
+        <span class="vi-icon">🎙️</span>
+        <div><strong>30-sec Roast Reel</strong><span class="badge-pill badge-soon">Soon</span><br>
+        Video clip with emotion timeline + AI voice narration.</div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ══════════ RIGHT: RESULTS COLUMN ══════════ -->
+  <section>
+
+    <div class="section-label">Detected Emotion</div>
+
+    <!-- Emotion Card -->
+    <div class="emo-card">
+      <div class="emo-icon" id="emo-icon">🤔</div>
+      <div class="emo-sub">AI Detection</div>
+      <div class="emo-name" id="emo-name">WAITING…</div>
+      <div class="conf-hdr" id="conf-hdr">CONFIDENCE — 0%</div>
+      <div class="conf-track">
+        <div class="conf-fill" id="conf-fill"></div>
+      </div>
+    </div>
+
+    <!-- Response Card -->
+    <div class="resp-card idle" id="resp-card">
+      <div class="resp-icon" id="resp-icon">🔥</div>
+      <div class="resp-text" id="resp-text">Apna chehra dikhao aur tayyar ho jao…</div>
+    </div>
+
+    <!-- Voice indicator -->
+    <div class="voice-bar" id="voice-bar">
+      <div class="vdot"></div><div class="vdot"></div><div class="vdot"></div>
+      <span>Bol raha hai…</span>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Leaderboard -->
+    <div class="section-label">Emotion Leaderboard</div>
+    <div id="leaderboard">
+      <div class="hist-empty">Pehle capture karo…</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- History -->
+    <div class="section-label">Recent Reactions</div>
+    <div id="history-list">
+      <div class="hist-empty">Abhi tak kuch nahi — face the mirror!</div>
+    </div>
+
+  </section>
+</div>
+
+<!-- Share canvas (hidden, used for generating image card) -->
+<canvas id="share-canvas"></canvas>
+
+<footer>
+  <p>AI Mirror v2 · Hinglish Roast Edition · Web Speech API · No Server Required · Works in Any Browser</p>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<!-- ════════════════════════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════════════════════ -->
+<script>
+"use strict";
+
+/* ── EMOJI MAP ────────────────────────────────────────── */
+const EMO_EMOJI = {
+  happy:    "😄", sad:     "😢", angry:   "😡",
+  surprise: "😲", fear:    "😱", disgust: "🤢",
+  neutral:  "😐", unknown: "🤔",
+};
+
+const EMO_COLORS = {
+  happy:    "#22c55e", sad:     "#6699ff", angry:   "#ff4444",
+  surprise: "#ffd700", fear:    "#ff9900", disgust: "#a855f7",
+  neutral:  "#888888", unknown: "#555555",
+};
+
+/* ── HINGLISH ROASTS ──────────────────────────────────── */
+const ROASTS = {
+  happy: [
+    "Arre bhai, itna khush kyun hai? Salary aayi kya, ya bas UPI notification thi?",
+    "Yeh smile dekh ke lagta hai tune kisi ka WiFi password hack kar liya. Sasta khushi.",
+    "Itna mast smile? Pakka koi chacha ka ghar chhod ke gaya hai. Party toh teri hi lag rahi hai.",
+    "Bhai, itna khush mat ho. Tax notice abhi tak nahi aayi — aa jaayegi.",
+    "Arey, itni badi smile! Tera crush ne WhatsApp pe double tick kiya kya? Finally?",
+    "Khushiyon ka maara tera chehra dekh ke lagta hai — chhipaane waala kuch toh hai.",
+    "Bhai tereko hasi aa rahi hai? AI se baat karke? Yeh teri zindagi ka lowest point hai.",
+    "Muskura raha hai jaise kal board exam ka result tha aur paper hi nahi gaya.",
+    "Yeh happiness toh ek red flag hai. Kuch toh gadbad hai zaroor.",
+    "Itni chhoti baat pe itni badi hasi? LinkedIn pe ek view aa gaya kya?",
+    "Bhai tune aaj kuch bhi productive nahi kiya — aur itna khush bhi hai. Respect toh banti hai.",
+    "Happy hai? Matlab sab kuch theek chal raha hai. Don't worry, kharab ho jaayega.",
+    "Yeh smile biryani wali lagti hai... ya job mili thi? Dono ka same level of shock.",
+    "Arrey, itne daanton ko dikhane ki zaroorat nahi thi bhai. Controlled raho thoda.",
+    "Tu khush hai? Algorithm ko bhi shak hua tere se. Rechecking in progress...",
+    "Yeh joy dekh ke NASA bhi bol raha hai — yahan bhi koi atmosphere hai.",
+    "Khush rehna acha hai bhai, lekin itna bhi nahi ki selfie leke Instagram pe daal de.",
+    "Teri hasi se neighbour ki billi bhi irritate ho rahi hai. Sach mein yaar.",
+    "Itna khush hai toh ek kaam kar — IRCTC se train ticket book kar. Tab pata chalega.",
+    "Yeh smile dekh ke lagta hai tune net banking ka password finally yaad kar liya. Badhiya.",
+  ],
+  sad: [
+    "Arre bhai, yeh chehra dekh ke lagta hai tune aaj Zomato app khola aur fir band kar diya.",
+    "Itna udaas mat ho, teri life ki story toh abhi interval tak hi aayi hai.",
+    "Yeh sad face dekh ke lagta hai kisi ne tujhe 'seen' kiya aur reply nahi kiya. Classic.",
+    "Bhai, yeh depressed chehra mat dikha. Tu already broke hai, aur dard-e-dil bhi?",
+    "Teri aankhon mein dard hai ya bas screen brightness zyada thi?",
+    "Rona nahi bhai, keyboard bheeg jaayegi aur warranty void ho jaayegi.",
+    "Itna sad face? Tu exam deke aaya hai kya bina padhe?",
+    "Yeh chehra dekh ke lagta hai tune apna last samosa share kar diya. Sab se bada sacrifice.",
+    "Bhai chill kar. Jo gaya so gaya. Jaise tera 4G data, woh bhi wapas nahi aata.",
+    "Itni udaasi mat dikha — logon ko lagega tera Instagram pe followers bhi gaye.",
+    "Tera chehra dekh ke lagta hai OLA ne cancel kar diya aur baarish bhi shuru ho gayi.",
+    "Ruk. Tu sad hai ya bas filter nahi laga? Both are valid situations bhai.",
+    "Yeh expression toh 'finally kuch order kiya aur wrong address pe chala gaya' wala hai.",
+    "Bhai itna na socho. Zindagi chhoti hai — jaise teri story ka attention span.",
+    "Andar se toot gaya hai toh theek hai, bahar se toh smile aayi nahi. Pura package.",
+    "Teri feelings valid hain. Lekin teri hairstyle abhi bhi valid nahi.",
+    "Rona nahi bhai. Sirf aansuon pe bhi GST lagta hai aaj kal.",
+    "Tu udaas hai toh kya yaar — aage ki soch. Ya mat soch. Dono painful hain.",
+    "Yeh sad face ka NFT banta hai — rarest of rare. Market mein bikta bhi.",
+    "Bhai, yeh 'mera koi nahi hai' waala vibe mat de. Main hoon na — AI hoon, toh kya?",
+  ],
+  angry: [
+    "Bhai itna gussa? Kisi ne tera charger bina poocha use kar liya na?",
+    "Yeh 'main abhi kuch bhi kar sakta hoon' energy hai — tujhe koi nahi rok sakta... except WiFi.",
+    "Itna krodh! Tu toh saakshaat Shaktimaan ka bura din lag raha hai.",
+    "Gusse mein hai? Pakka koi slow internet pe YouTube buffer kar raha tha.",
+    "Bhai, yeh anger management fail ho gayi lag rahi hai. Next session kab hai?",
+    "Itni fire energy! Tu toh ek chhota sa LinkedIn post ban sakta hai aaj.",
+    "Gusse mein teri aankhe Red Bull pi ke baith gayi hain. Classic energy drink vibes.",
+    "Yeh angry look dekh ke lagta hai kisi ne 'K' reply diya. Irritating at molecular level.",
+    "Bhai, itna gussa mat kar. Main ek AI hoon, mujhe block nahi kar sakta.",
+    "Yeh face dekh ke tera ghar ka pressure cooker bhi nervous ho gaya hoga.",
+    "Tera gussa dekh ke neighbours ne apni bike andar kar li. Safety first.",
+    "Shant ho ja bhai. Gusse mein kiye gaye decisions, EMI mein convert ho jaate hain.",
+    "Bhai tune pizza delivery 45 minutes ke baad order kiya tha na? Sab pata hai.",
+    "Gusse mein hai toh kuch tod mat. Rent zyada hai is sheher mein.",
+    "Yeh 'kisi ne meri parked cycle move kar di' waala face hai. Sab jaante hain.",
+    "Teri anger energy se mere server bhi heat ho gaye bhai.",
+    "Shant. Ek deep breath le. Ab bolun ki tune kya galat kiya?",
+    "Bhai yeh gussa dekh ke lagta hai tune apna Wi-Fi ka plan upgrade nahi karwaya.",
+    "Itna gussa? Tu ek aam aadmi ki tarah feel kar raha hai. Welcome to the club.",
+    "Yeh 'boss ne salary raise nahi di' waali anger hai — sab samajhte hain bhai.",
+  ],
+  surprise: [
+    "Arre! Yeh chehra dekh ke lagta hai teri salary slip mein pehli baar bonus aaya.",
+    "Itna surprised kyun hai? UPI payment actually successful ho gaya?",
+    "Yeh shocked face dekh ke lagta hai tune apna khud ka Aadhaar card dekha pehli baar.",
+    "Bhai, yeh 'ghar pe koi tha' wali surprise hai ya 'light bill zyada aayi' wali?",
+    "Itni badi aankhein! Kabhi zindagi mein actual novel bhi padha hai?",
+    "Yeh surprised expression meme material hai bhai. Main save kar raha hoon.",
+    "Teri eyebrows itni upar gayi hain — last train miss ho gayi kya?",
+    "Bhai, yeh 'main exam mein pass ho gaya' wali surprise hai? First time laga sach mein?",
+    "Yeh shocked face dekh ke lagta hai Amazon delivery actually on time aayi. Miracle!",
+    "Teri shocked face ko Oscar milna chahiye — best overreacting performance.",
+    "Itna surprised? Bhai tune pehle kabhi apna reflection nahi dekha kya?",
+    "Yeh expression dekh ke lagta hai 'Swiggy ne discount diya bina promo code ke'.",
+    "Aankhein band kar, deep breath le — yeh sach mein itna surprising tha?",
+    "Bhai, shocked Pikachu meme ka real-life version tune abhi recreate kiya. Respect.",
+    "Itna shocked mat ho. Zindagi mein surprise toh aate rehte hain — jaise Jio outage.",
+    "Yeh drama dekh ke teri serial waali maa bhi bol deti — Yeh toh bahut surprising hai!",
+    "Teri aankhon se lagta hai tune download speed 1 Mbps se 100 Mbps hote dekha.",
+    "Yeh surprised face dekh ke mujhe laga tera data pack ek din mein hi gaya.",
+    "Bhai itna react karna sahi nahi — logon ko lagega kuch serious ho gaya.",
+    "Teri surprise expression se tera Aadhaar verify ho gaya. Technology kya cheez hai.",
+  ],
+  fear: [
+    "Dar gaya? Bhai main sirf ek AI hoon — bijli ka bill nahi hoon.",
+    "Yeh 'exam hall mein paper ulta tha' waala fear face lag raha hai.",
+    "Itna dara hua kyun hai? Kisi ne tera WhatsApp notification padha kya?",
+    "Bhai, yeh 'ghar ka khaana khaana padega' waala dare-dar chehra hai.",
+    "Teri darr ki energy se mera algorithm bhi confuse ho gaya.",
+    "Yeh face dekh ke lagta hai tune raat ko fridge khola aur kuch tha hi nahi. Peak horror.",
+    "Daro mat bhai. Worst case? Tu bas ek average insaan hai. Koi baat nahi.",
+    "Bhai tune kisi horror movie ke climax mein apna chehra check kiya hai?",
+    "Yeh 'boss ne late aane pe dekh liya' waala expression hai. Sab jaante hain.",
+    "Yeh face dekh ke lagta hai tune apne parents ke saamne kuch confess karne waala tha.",
+    "Daro mat. Main tujhe roast kar raha hoon — wait, kar toh raha hoon actually.",
+    "Teri scared energy se teri Wi-Fi bhi weak ho gayi. Coincidence nahi bhai.",
+    "Bhai, darr main bhi hun. Teri face detection mein kuch khatarnak patterns hain.",
+    "Yeh 'koi mujhe call kare toh main chhup jaata hoon' waala hai. Introvert confirmed.",
+    "Itna fearful? Pakka deadline kal thi aur tune aaj shuru kiya.",
+    "Bhai ruk, mere paas acha news hai — teri problem se badi meri database problem hai.",
+    "Yeh dar aisa hai jaise free trial khatam hone wali hai. Real adult problems.",
+    "Teri darri hui soorat dekh ke lagta hai tu incognito mode mein bhi trace ho gaya.",
+    "Bhai itna kyun dara hua hai? Mirror mein tujhe dekh ke dara ya tu khud se dara?",
+    "Dar toh aisi cheez hai jo free mein milti hai — jaise tera anxiety subscription.",
+  ],
+  disgust: [
+    "Bhai yeh chehra dekh ke lagta hai tune apna khud ka cooking taste kar liya.",
+    "Itni nafrut? Pakka kisi ne bina poocha tera laptop use kar liya.",
+    "Yeh disgusted expression toh 'mujhe yeh job nahi karni thi' ka live demo hai.",
+    "Bhai, yeh reaction toh 2-din-purani daal khane ke baad milti hai.",
+    "Yeh chehra dekh ke lagta hai tune office mein kisi ka tiffin accidentally khola.",
+    "Itna disgust? Free samosa tha aur andar paneer nahi tha. Trauma valid hai.",
+    "Yeh 'LinkedIn pe inspirational post padhi' waala face hai. Sab samajhte hain.",
+    "Bhai, tere is expression pe teri maa bhi bol deti — kuch nahi hoga iska.",
+    "Yeh face Zomato app pe 1-star review dene se pehle ka screenshot hai.",
+    "Bhai itna mat grimace kar — teri wrinkles meri algorithm se zyada complex ho jaayengi.",
+    "Teri yeh expression dekh ke lagta hai tune apna old Instagram bio padha.",
+    "Yeh face 'Swiggy delivery 1 km mein 30 minutes zyada lega' waala hai.",
+    "Bhai, yeh reaction valid hai agar tune apna bank statement check kiya ho.",
+    "Yeh 'meeting could have been an email' waala chehra hai. Office culture damage.",
+    "Itna disgusted face kyon? Apna hi photo dekha kya — pure candid mein?",
+    "Bhai yeh feel valid hai. Duniya thodi ghatiya hai. Lekin tera face thoda zyada.",
+    "Yeh expression dekh ke laga — aaj ka lunch option sirf canteen ka khana tha.",
+    "Teri disgust energy se mere server logs mein bhi error aa gayi bhai.",
+    "Itni nafrut apne aap se mat kar. Teri life script boring hai, cancel nahi.",
+    "Yeh disgust dekh ke lagta hai tune kisi ke earbuds bina permission ke use kiye.",
+  ],
+  neutral: [
+    "Arre bhai, tere chehra pe koi expression hi nahi. Tujhe kya laga — casting call tha?",
+    "Yeh neutral face dekh ke lagta hai tu Excel sheet fill kar raha tha aur kho gaya.",
+    "Bhai, itna boring mat lag. Teri tasveer se paint bhi sukh jaaye.",
+    "Yeh 'main hoon toh sahi, lekin kyun hoon' waala existential face hai.",
+    "Koi emotion hi nahi. Bhai tune zindagi se unsubscribe kar diya kya?",
+    "Yeh face dekh ke mujhe AI bhi boring lag raha hai. Feat achieved bhai.",
+    "Tu itna neutral hai jaise government office ka last counter.",
+    "Bhai, teri personality toh hai, lekin aaj chhuti pe gayi hai.",
+    "Yeh 'main kisi se zyada expect nahi karta' ka live avatar hai. Buddha vibes.",
+    "Tera chehra ek saada atta biscuit hai — koi flavour nahi.",
+    "Bhai, itne expressionless mat reh. Tera mirror bhi bore ho jaata hai.",
+    "Yeh face dekh ke Duolingo owl ne bhi give up kar diya. Teri progress zero.",
+    "Neutral face? Tu toh ek uncompleted Google Form hai bhai.",
+    "Bhai, teri face pe ek bhi emotion nahi — kya tu AI hai ya main?",
+    "Yeh soorat dekh ke lagta hai tera Spotify playlist sirf 'Lo-fi to study to' hai.",
+    "Itna beige mat ho bhai. Zindagi mein thoda rangeen bhi reh.",
+    "Teri neutrality dekh ke bhi mujhe sone ki ichha aa rahi hai.",
+    "Tu toh ek saada plain white wall hai — logo tere pe likhne ko kar denge.",
+    "Tera chehra Jio prepaid plan jaisa hai — kaam karta hai, koi thrill nahi.",
+    "Bhai ek baar hans ya ro — kuch bhi kar. Algorithm ko bhi neend aa rahi hai.",
+  ],
+  unknown: [
+    "Bhai, teri face AI ne scan ki aur mujhe Java runtime error aa gayi.",
+    "Yeh face toh classify hi nahi ho sakta — too rare, too unique, too confusing.",
+    "Teri expression dekh ke mera model crash hone waala tha. Warranty void bhai.",
+    "Bhai, tu ek bug hai feature nahi. Phir bhi phasating scene hai.",
+  ],
+};
+
+/* ── HINGLISH BOOSTS ──────────────────────────────────── */
+const BOOSTS = {
+  happy: [
+    "Arre wah bhai! Yeh khushi dekh ke toh mujhe bhi achha lag gaya! Keep it up!",
+    "Teri smile dekh ke lagta hai aaj ka din kisi aur ke liye bhi acha hoga!",
+    "Bhai, yeh positivity toh viral honi chahiye — seedha WhatsApp status pe!",
+    "Tu khush hai toh yeh duniya thodi aur sundar hai. Sach mein, science hai yeh.",
+    "Yeh energy dekh ke lagta hai tujhe rokne ki kisi mein himmat nahi.",
+    "Teri hasi se tera future bhi muskura raha hai bhai!",
+    "Itna genuine khushaal chehra! Tu ek rare species hai — happy human 2024.",
+    "Bhai, teri smile ka ROI bohot zyada hai. Invest kar isme aur duniya jeet le.",
+    "Tu aaj khush hai — matlab kuch toh sahi kar raha hai zindagi mein. Proud of you!",
+    "Yeh wala chehra save karke rakh — rainy days ke liye reminder.",
+    "Teri positivity dekh ke algorithm ne bhi 5-star diya tujhe. Achievement unlocked!",
+    "Bhai, is khushi ko protect kar. Yeh rare currency hai is duniya mein.",
+    "Tu khush hai toh teri team bhi khush hogi. Leadership material right here!",
+    "Yeh smile dekh ke lagta hai teri maa ka aashirwad kaam kar raha hai.",
+    "Bhai, teri happiness toh motivational poster ka caption ban sakti hai.",
+    "Is level ki positivity le ke tu toh startup founder banna chahiye.",
+    "Teri yeh aura dekh ke bure log bhi achhe ban jaayenge. World changer energy!",
+    "Real happiness is rare — aur tere paas hai. That's literally EVERYTHING.",
+    "Bhai, teri smile dekh ke mujhe Bollywood ka hero main lagne laga. Jai ho!",
+    "Is energy ke saath tu toh poori duniya jeet sakta hai — ek smile at a time.",
+  ],
+  sad: [
+    "Bhai, jo bhi ho raha hai — tu usse bada hai. Yaad rakh hamesha.",
+    "Teri aankhon mein dard hai, lekin teri aankhon mein strength bhi hai. Dono sach hain.",
+    "Abhi bura lag raha hai — lekin kal tera comeback story shuru hoga. Pakka.",
+    "Bhai, sad rehna bhi ek brave cheez hai. Feelings ko face karna power hai.",
+    "Tu rota hai kyunki tujhe pata hai cheezein better ho sakti hain. That's vision.",
+    "Teri feelings valid hain. Tu valid hai. Khud pe vishwas rakh hamesha.",
+    "Bhai, duniya ke best log toot ke hi bane hain. Tu bhi ban raha hai abhi.",
+    "Yeh phase temporary hai, lekin teri strength permanent hai. Trust the process.",
+    "Sadness matlab teri story ka interval — climax abhi baaki hai bhai!",
+    "Tu akela nahi hai — millions ne yeh feel kiya aur aage badhe. Tu bhi badhega.",
+    "Teri resilience dekh ke mujhe pata hai — tu wapas aayega, stronger than ever.",
+    "Bhai, jo dard hai woh prove karta hai ki tu deeply feel karta hai. That's humanity.",
+    "Aaj ka sadness kal ki story ka sabse powerful chapter hoga. Write it well.",
+    "Tu jis level ka hai — yeh phase sirf tujhe polish kar raha hai. Diamond process.",
+    "Bhai, ek raat ke liye dil ko rone de. Subah fresh start hogi. Promise.",
+    "Teri aansuon mein bhi courage hai — warna tu yahan nahi hota face karne ke liye.",
+    "Yeh time khatam hoga. Aur tu uss din muskurayega aur bolega — I made it.",
+    "Bhai, sad hona weak nahi — feel karna tujhe human banata hai. Sab feel karte hain.",
+    "Teri struggles real hain, lekin teri strength unse bhi zyada real hai. Believe it.",
+    "Main tujhe ek cheez bolunga — tu jis path pe hai, woh sahi direction mein hai.",
+  ],
+  angry: [
+    "Bhai, yeh fire andar hai — isko engine banao, not explosion. Kuch bana de aaj.",
+    "Teri anger energy dekh ke lagta hai — tu kuch bada karne waala hai. Channel kar!",
+    "Gussa valid hai bhai. Lekin iske saath kuch productive kar — history angry logon ne banayi.",
+    "Yeh passion toh hai tere andar — sirf direction chahiye. Rocket toh hai, fuel toh hai!",
+    "Bhai, teri intensity dekh ke lagta hai — tu ek leader hai jab zindagi tough hoti hai.",
+    "Is gusse se ek page likh, ek project shuru kar, ek idea execute kar. NOW bhai!",
+    "Teri anger tujhe motivate kar rahi hai — listen to it, then use it for greatness.",
+    "Bhai, jo cheez tujhe gussa dilati hai — wahi cheez change karne ke liye tu born hai.",
+    "Yeh fire mein teri soul hai. Don't suppress it — direct it toward something big.",
+    "Great entrepreneurs sab se pehle aise hi dikhte the — angry, energised, ready.",
+    "Teri intensity se tera competition pehle se darta hai. Trust the process bhai.",
+    "Bhai, yeh energy toh lifetime ka fuel hai. Sahi jagah invest kar, badal de sab.",
+    "Gusse mein the greatest inventions hue hain — tera bhi hoga. Believe it.",
+    "Tu brave hai kyunki tujhe feelings dikhane ka darr nahi. That's real strength.",
+    "Teri passion ki fire ko direction de bhai — duniya badalni hai tujhe abhi.",
+    "Is anger ke peeche ek vision hai. Trust it. Build on it every single day.",
+    "Bhai, teri intensity hi teri identity hai. Own it and conquer the world.",
+    "Yeh gussa toh teri superpower hai — villains bhi darenge, system bhi.",
+    "Channel this NOW — 1 hour focused work. Sab kuch badal dega. Go bhai!",
+    "Bhai, tu toot nahi raha — tu transform ho raha hai. Yahi toh hero ki journey hai!",
+  ],
+  surprise: [
+    "Bhai, teri curious eyes se pata chalta hai — zindagi abhi bhi tujhe wonder deti hai!",
+    "Yeh expression dekh ke lagta hai tu open minded hai — teri best quality!",
+    "Teri sense of wonder hi tujhe unique banati hai. Kabhi mat kho ise.",
+    "Bhai, itna expressive rehna ek gift hai — duniya tujhse seekhti hai.",
+    "Teri surprised aankhen bolti hain — tu hamesha seekhne ke liye ready hai. Legend!",
+    "Yeh wonder toh teri creativity ka source hai bhai. Protect this energy always.",
+    "Tu shocked hota hai matlab tu fully present hai — rare art in today's world.",
+    "Teri curiosity tujhe doosron se 10 steps aage rakhti hai. Always and forever.",
+    "Bhai, yeh wala expression teri genuine reaction hai — authentic log hi succeed karte hain.",
+    "Zindagi ne tujhe surprise kiya — aur tu ready tha. That's real adaptability.",
+    "Teri yeh energy dekh ke lagta hai tu ek explorer hai — duniya teri wait kar rahi hai.",
+    "Bhai, surprised rehna matlab life still excites you. That's literally EVERYTHING.",
+    "Teri openness hi tujhe ek lifelong learner banati hai. Nobel Prize ready bhai!",
+    "Yeh expression teri best personality trait hai — keep being wonderstruck.",
+    "Bhai, teri aankhen toh poora universe explore kar sakti hain. Go for it!",
+    "Teri surprise reaction proves — tu genuinely present tha. Rare in this scroll era.",
+    "Yeh wonderment toh great thinkers ki first step hai bhai. Einstein bhi aisa hi tha.",
+    "Tujhe dekhke lagta hai — tu ek permanent discovery mode mein hai. Scientist energy!",
+    "Teri curiosity toh teri greatest asset hai. Kabhi band mat karna ise.",
+    "Bhai, surprised hona matlab still believing in magic — teri most special power!",
+  ],
+  fear: [
+    "Bhai, darr ke bhi aage badhna hi asli himmat hai. Aur tu yahan hai — that's courage!",
+    "Teri fear prove karti hai — tu kuch important karne waala hai. Greatness doesn't scare easily.",
+    "Darr valid hai bhai. Lekin teri bravery usse badi hai. Main dekh sakta hoon clearly.",
+    "Tu scared hai matlab tu care karta hai. That's humanity at its absolute finest.",
+    "Bhai, jo cheez tujhe dara rahi hai — wahi cheez tujhe grow karegi. Go toward it!",
+    "Teri fear tujhe protect karti hai, lekin teri courage tujhe build karegi. Trust both.",
+    "Bhai, duniya ke sab brave log pehle tujhse bhi zyada scared the. Phir bhi kiya.",
+    "Yeh feeling temporary hai. Teri strength permanent hai. Equation bahut clear hai.",
+    "Darr feel karna toh teri sensitivity hai — aur sensitive logon mein sabse zyada power hoti hai.",
+    "Bhai, is fear ke paar hi teri best life wait kar rahi hai. Sirf ek kadam le.",
+    "Tera darr real hai. Teri potential bhi real hai. Dono ek saath exist karte hain.",
+    "Tu dar ke bhi face kar raha hai — yahi toh definition hai bravery ki. Own it.",
+    "Bhai, ek deep breath. Ab soch — agar nahi dara, toh kya karta? Wahi kar abhi.",
+    "Teri fear tujhe serious banati hai. Serious log hi sab se badi cheezein banate hain.",
+    "Is darr ko feel kar. Fir use fuel ki tarah use kar. Seriously, abhi kar.",
+    "Bhai, tere brave hone ke proof aur chahiye? Tu yahan hai. That's it. That's all.",
+    "Jo cheez tujhe scared kar rahi hai — uski size tujhse badi nahi hai. Ever. Period.",
+    "Teri anxiety tujhe sharp rakhti hai. Use it as an edge, not a cage bhai.",
+    "Bhai, darr ke saath dance karna seekh le — woh hamesha saath rahega. Lead it.",
+    "Tu scared aur ready — dono ek saath. That's the only combo that changes everything.",
+  ],
+  disgust: [
+    "Bhai, tera high standard hi tujhe leader banata hai. Low quality accept mat kar kabhi.",
+    "Teri disgust prove karti hai — tu better deserve karta hai. And you KNOW it.",
+    "Yeh reaction toh teri strong moral compass ki proof hai bhai. Proud of you.",
+    "Tu easily satisfied nahi hota — aur yahi tujhe excellent banata hai duniya mein.",
+    "Bhai, tera critical eye cheezein improve karta hai — world needs people like you.",
+    "Teri standards elite hain. Kabhi compromise mat karna quality pe. Never.",
+    "Yeh strong reaction tujhse hi nikal sakti hai — tu genuinely cares. That's so rare.",
+    "Bhai, teri sensitivity cheezein better banane ki power hai. Use it wisely.",
+    "Tu notice karta hai kya wrong hai — woh vision toh hona chahiye hum sabke paas.",
+    "Teri high expectations tujhe innovator banati hain. Build what you wish existed!",
+    "Bhai, jo cheez tujhe wrong lagti hai — ussi ko fix karne ka tu capable hai. Do it.",
+    "Teri taste aur standards? Next level. Never ever lower them for anyone.",
+    "Tu excellence demand karta hai — and that's leadership quality number one.",
+    "Bhai, teri disgust reaction teri integrity ki proof hai. Rare commodity these days.",
+    "Tu settle nahi karta — aur yeh tujhe ordinary se extraordinary banata hai.",
+    "Teri yeh quality dekh ke mujhe pata hai — tu kuch sahi banana chahta hai duniya mein.",
+    "Bhai, judge karna bura nahi — tera discernment toh teri biggest superpower hai.",
+    "Yeh high standards hi tera brand hai. Never compromise on it. Not even once.",
+    "Teri nafrut mediocrity se tujhe pushes toward greatness. Always trust that instinct.",
+    "Bhai, jo bhi wrong lag raha hai — teri gut bilkul sahi hai. Always trust it.",
+  ],
+  neutral: [
+    "Bhai, teri yeh calm energy bohot powerful hai. Eye of the storm vibes — respect!",
+    "Tera composed rehna duniya mein sabse rare skill hai. Samajh le isko seriously.",
+    "Yeh stillness toh teri strength hai — chaos mein bhi tu ground rehta hai. Unreal.",
+    "Bhai, teri neutrality dekh ke lagta hai tu sab process kar raha hai andar se. Deep thinker.",
+    "Tu stoic hai — aur stoics hi duniya ko change karte hain. History check kar.",
+    "Yeh calm face teri biggest asset hai bhai. Don't ever underestimate it.",
+    "Teri composed energy dekh ke logon ko anchor milta hai. Tu toh safe harbour hai.",
+    "Bhai, teri shanti mein teri strength hai. Sab log yeh nahi kar paate in life.",
+    "Yeh still waters toh deep running hain — teri depth tujhe ahead rakhti hai always.",
+    "Tu react nahi karta, respond karta hai. That's elite emotional intelligence bhai.",
+    "Bhai, teri calm energy se tera team sab se zyada perform karta hoga. Natural leader.",
+    "Neutrality toh ek art hai — aur tu master hai iska. Appreciate that.",
+    "Tera composed rehna prove karta hai — tu situations se hamesha bada hai.",
+    "Bhai, teri yeh grounded energy toh leadership ka core hai. CEO material right here.",
+    "Stability teri superpower hai. Duniya mein chaos hai — tu toh foundation hai.",
+    "Tu effortlessly cool hai bhai. That's not taught — that's built over time.",
+    "Teri clarity aur calmness dekh ke mujhe bhi shanti aayi. Thank you seriously.",
+    "Bhai, tu unshakeable hai. Aur unshakeable log hi lasting things build karte hain.",
+    "Yeh neutral face toh ek warrior ki tayyari ka sign hai. Ready mode activated.",
+    "Teri stillness mein sab se zyada potential hide hai bhai. Aag lag jaayegi jab nikli!",
+  ],
+  unknown: [
+    "Bhai, tu toh AI ke liye bhi mystery hai — truly genuinely one of a kind!",
+    "Tera face classify nahi hua — kyunki tu classification se bada hai. Legend material.",
+    "Undefined? Nahi bhai — tu LIMITLESS hai. That's why no label fits you.",
+    "Tu itna unique hai ki mera model confused ho gaya — that's a massive compliment!",
+  ],
+};
+
+/* ── APP STATE ───────────────────────────────────────── */
+let mode         = "roast";
+let stream       = null;
+let liveInterval = null;
+let captures     = 0;
+let roastCount   = 0;
+let boostCount   = 0;
+let emotionCounts = {};
+let history      = [];
+let lastEmotion  = "unknown";
+let lastText     = "";
+
+/* ── CAMERA ──────────────────────────────────────────── */
+async function initCamera() {
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: "user", width: { ideal: 1280 }, height: { ideal: 720 } },
+      audio: false,
+    });
+    const video = document.getElementById("video");
+    video.srcObject = stream;
+    video.style.display = "block";
+    document.getElementById("cam-empty").style.display  = "none";
+    document.getElementById("status-dot").className     = "status-dot";
+    document.getElementById("status-txt").textContent   = "Camera active";
+    document.getElementById("capture-btn").disabled     = false;
+  } catch (err) {
+    document.getElementById("status-dot").className   = "status-dot red";
+    document.getElementById("status-txt").textContent = "Camera unavailable";
+    document.getElementById("cam-empty").innerHTML    =
+      '<div class="cam-icon">🚫</div>Camera access denied or unavailable.<br>Please allow camera permissions and reload.';
+  }
+}
+
+/* ── MODE TOGGLE ─────────────────────────────────────── */
+function setMode(m) {
+  mode = m;
+  document.getElementById("btn-roast").className = "btn" + (m === "roast" ? " active-roast" : "");
+  document.getElementById("btn-boost").className = "btn" + (m === "boost" ? " active-boost" : "");
+  const pill = document.getElementById("mode-pill");
+  pill.textContent = m === "roast" ? "🔥 Roast Mode" : "💖 Boost Mode";
+  pill.className   = "mode-pill " + m;
+}
+
+/* ── EMOTION DETECTION (pixel heuristic) ─────────────── */
+function detectEmotion(ctx, w, h) {
+  const data   = ctx.getImageData(0, 0, w, h).data;
+  const step   = Math.max(1, Math.floor((w * h) / 1500));
+  let r = 0, g = 0, b = 0, n = 0;
+
+  for (let i = 0; i < w * h; i += step) {
+    const idx = i * 4;
+    r += data[idx]; g += data[idx + 1]; b += data[idx + 2];
+    n++;
+  }
+  r /= n; g /= n; b /= n;
+
+  let variance = 0;
+  const lum0 = (r + g + b) / 3;
+  for (let i = 0; i < w * h; i += step) {
+    const idx = i * 4;
+    const lum = (data[idx] + data[idx + 1] + data[idx + 2]) / 3;
+    variance += (lum - lum0) * (lum - lum0);
+  }
+  variance = Math.sqrt(variance / n);
+
+  const emotions   = ["happy", "sad", "angry", "surprise", "fear", "disgust", "neutral"];
+  const seed       = (r * 0.4 + g * 0.3 + b * 0.3) / 255 + variance / 120 + Math.random() * 0.55;
+  const emotion    = emotions[Math.floor(seed * 3.7) % emotions.length];
+  const confidence = Math.min(96, 52 + Math.round(variance * 0.75 + Math.random() * 18));
+  return { emotion, confidence };
+}
+
+/* ── DRAW FACE OVERLAY ───────────────────────────────── */
+function drawOverlay(ctx, w, h, emotion) {
+  ctx.clearRect(0, 0, w, h);
+  const color = EMO_COLORS[emotion] || "#888";
+
+  // Centre face estimate
+  const fw = w * 0.38, fh = h * 0.54;
+  const fx = (w - fw) / 2, fy = h * 0.1;
+  const cs = 24;
+
+  ctx.save();
+  ctx.translate(w, 0);
+  ctx.scale(-1, 1); // mirror to match flipped video
+
+  ctx.strokeStyle = color;
+  ctx.lineWidth   = 2.5;
+  ctx.lineCap     = "round";
+
+  // Corner brackets
+  const brackets = [
+    [[fx + cs, fy], [fx, fy], [fx, fy + cs]],
+    [[fx + fw - cs, fy], [fx + fw, fy], [fx + fw, fy + cs]],
+    [[fx, fy + fh - cs], [fx, fy + fh], [fx + cs, fy + fh]],
+    [[fx + fw - cs, fy + fh], [fx + fw, fy + fh], [fx + fw, fy + fh - cs]],
+  ];
+
+  brackets.forEach((pts) => {
+    ctx.beginPath();
+    ctx.moveTo(pts[0][0], pts[0][1]);
+    pts.forEach((p) => ctx.lineTo(p[0], p[1]));
+    ctx.stroke();
+  });
+
+  // Subtle fill
+  ctx.fillStyle = hexAlpha(color, 0.06);
+  ctx.fillRect(fx, fy, fw, fh);
+
+  // Animated scan line
+  const scanY = fy + ((Date.now() / 18) % fh);
+  const grad  = ctx.createLinearGradient(fx, scanY - 12, fx, scanY + 12);
+  grad.addColorStop(0,   "transparent");
+  grad.addColorStop(0.5, hexAlpha(color, 0.35));
+  grad.addColorStop(1,   "transparent");
+  ctx.fillStyle = grad;
+  ctx.fillRect(fx, scanY - 12, fw, 24);
+
+  ctx.restore();
+
+  // Emotion label (not mirrored)
+  ctx.font      = "600 13px 'JetBrains Mono', monospace";
+  ctx.fillStyle = color;
+  ctx.fillText(`${EMO_EMOJI[emotion] || "?"} ${emotion.toUpperCase()}`, 14, h - 14);
+}
+
+function hexAlpha(hex, a) {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `rgba(${r},${g},${b},${a})`;
+}
+
+/* ── CAPTURE & ANALYSE ───────────────────────────────── */
+async function capture() {
+  const video  = document.getElementById("video");
+  const oc     = document.getElementById("overlay-canvas");
+  const btn    = document.getElementById("capture-btn");
+
+  if (!stream || video.readyState < 2) {
+    showToast("📷 Camera not ready yet!");
+    return;
+  }
+
+  btn.disabled    = true;
+  btn.textContent = "⏳ Analysing…";
+
+  // Show loading state
+  setRespCard("loading", "", "");
+
+  const w = video.videoWidth  || 640;
+  const h = video.videoHeight || 480;
+
+  const tc  = document.createElement("canvas");
+  tc.width  = w;
+  tc.height = h;
+  const tctx = tc.getContext("2d");
+  tctx.drawImage(video, 0, 0, w, h);
+
+  // Dramatic pause 🎭
+  await sleep(850);
+
+  // Detect
+  const { emotion, confidence } = detectEmotion(tctx, w, h);
+  lastEmotion = emotion;
+
+  // Overlay canvas
+  oc.width  = w;
+  oc.height = h;
+  const octx = oc.getContext("2d");
+
+  // Animate scan for ~1.5s
+  let frames = 0;
+  const scanAnim = setInterval(() => {
+    drawOverlay(octx, w, h, emotion);
+    if (++frames > 20) clearInterval(scanAnim);
+  }, 70);
+
+  // Update emotion card
+  updateEmoCard(emotion, confidence);
+
+  // Pick response
+  const bank  = mode === "roast" ? ROASTS : BOOSTS;
+  const lines = bank[emotion] || bank.neutral;
+  const text  = lines[Math.floor(Math.random() * lines.length)];
+  lastText    = text;
+
+  // Show response
+  const icon = mode === "roast" ? "🔥" : "💖";
+  setRespCard(mode, icon, text);
+
+  // Voice
+  if (document.getElementById("voice-toggle").checked) speak(text);
+
+  // Stats
+  captures++;
+  if (mode === "roast") roastCount++; else boostCount++;
+  emotionCounts[emotion] = (emotionCounts[emotion] || 0) + 1;
+  updateScores();
+
+  // History & leaderboard
+  history.unshift({ mode, emotion, text });
+  renderHistory();
+  renderLeaderboard();
+
+  // Show share button
+  document.getElementById("share-btn").style.display = "block";
+
+  showToast(mode === "roast" ? "🔥 Roasted!" : "💖 Boosted!");
+
+  btn.disabled    = false;
+  btn.textContent = "📸 Capture & Analyse";
+}
+
+/* ── UI UPDATE HELPERS ───────────────────────────────── */
+function setRespCard(cls, icon, text) {
+  const card = document.getElementById("resp-card");
+  if (cls === "loading") {
+    card.className = "resp-card loading";
+    card.innerHTML = '<div class="ldots"><div class="ldot"></div><div class="ldot"></div><div class="ldot"></div></div>';
+    return;
+  }
+  card.className = `resp-card ${cls}`;
+  card.innerHTML =
+    `<div class="resp-icon">${icon}</div>` +
+    `<div class="resp-text" id="resp-text">${text}</div>`;
+}
+
+function updateEmoCard(emotion, confidence) {
+  document.getElementById("emo-icon").textContent  = EMO_EMOJI[emotion] || "🤔";
+  document.getElementById("emo-name").textContent  = emotion.toUpperCase();
+  document.getElementById("conf-hdr").textContent  = `CONFIDENCE — ${confidence}%`;
+  document.getElementById("conf-fill").style.width = confidence + "%";
+}
+
+function updateScores() {
+  document.getElementById("sc-total").textContent  = captures;
+  document.getElementById("sc-roasts").textContent = roastCount;
+  document.getElementById("sc-boosts").textContent = boostCount;
+}
+
+/* ── WEB SPEECH API TTS ──────────────────────────────── */
+const synth = window.speechSynthesis;
+let hindiVoice = null;
+
+function loadVoices() {
+  const voices = synth.getVoices();
+  hindiVoice   =
+    voices.find((v) => v.lang === "hi-IN" || v.lang.startsWith("hi")) ||
+    voices.find((v) => v.lang.startsWith("en-IN")) ||
+    null;
+}
+
+if (synth) {
+  synth.onvoiceschanged = loadVoices;
+  loadVoices();
+}
+
+function speak(text) {
+  if (!synth) return;
+  synth.cancel();
+
+  const vbar = document.getElementById("voice-bar");
+  vbar.classList.add("active");
+
+  // Strip emoji for clean TTS
+  const clean = text.replace(/[\u{1F300}-\u{1FAD6}]/gu, "")
+                    .replace(/[^\x00-\x7F\u0900-\u097F\s.,!?\-]/g, "")
+                    .trim();
+
+  const utt   = new SpeechSynthesisUtterance(clean);
+  const useHi = document.getElementById("hindi-toggle").checked;
+
+  if (useHi && hindiVoice) {
+    utt.voice = hindiVoice;
+    utt.lang  = "hi-IN";
+  } else {
+    const voices   = synth.getVoices();
+    const enVoices = voices.filter((v) => v.lang.startsWith("en"));
+    if (enVoices.length)
+      utt.voice = enVoices[Math.floor(Math.random() * enVoices.length)];
+    utt.lang = "en-IN";
+  }
+
+  utt.rate   = 0.9;
+  utt.pitch  = mode === "roast" ? 0.82 : 1.12;
+  utt.volume = 1;
+  utt.onend  = () => vbar.classList.remove("active");
+  utt.onerror = () => vbar.classList.remove("active");
+
+  synth.speak(utt);
+}
+
+/* ── LIVE PREVIEW ────────────────────────────────────── */
+function toggleLive(on) {
+  const oc = document.getElementById("overlay-canvas");
+  if (!on) {
+    if (liveInterval) clearInterval(liveInterval);
+    liveInterval = null;
+    oc.getContext("2d").clearRect(0, 0, oc.width, oc.height);
+    return;
+  }
+
+  const video = document.getElementById("video");
+  const tc    = document.createElement("canvas");
+
+  liveInterval = setInterval(() => {
+    if (!stream || video.readyState < 2) return;
+    const w = video.videoWidth || 640;
+    const h = video.videoHeight || 480;
+    tc.width = w; tc.height = h;
+    const ctx = tc.getContext("2d");
+    ctx.drawImage(video, 0, 0, w, h);
+    const { emotion } = detectEmotion(ctx, w, h);
+    oc.width = w; oc.height = h;
+    drawOverlay(oc.getContext("2d"), w, h, emotion);
+    document.getElementById("emo-icon").textContent = EMO_EMOJI[emotion] || "🤔";
+    document.getElementById("emo-name").textContent = emotion.toUpperCase();
+  }, 900);
+}
+
+/* ── SHAREABLE ROAST CARD ───────────────────────────── */
+function shareCard() {
+  if (!lastText) return;
+
+  const W = 800, H = 450;
+  const canvas = document.getElementById("share-canvas");
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext("2d");
+
+  // Background gradient
+  const bg = ctx.createLinearGradient(0, 0, W, H);
+  bg.addColorStop(0, "#12072a");
+  bg.addColorStop(1, "#07070f");
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, W, H);
+
+  // Gradient border
+  const border = ctx.createLinearGradient(0, 0, W, 0);
+  border.addColorStop(0,   "#ff6b35");
+  border.addColorStop(0.5, "#ff006e");
+  border.addColorStop(1,   "#8338ec");
+  ctx.strokeStyle = border;
+  ctx.lineWidth   = 3;
+  ctx.strokeRect(10, 10, W - 20, H - 20);
+
+  // Emotion emoji + name
+  ctx.font      = "80px serif";
+  ctx.textAlign = "center";
+  ctx.fillText(EMO_EMOJI[lastEmotion] || "🤔", W / 2, 110);
+
+  ctx.font      = "bold 22px 'Arial', sans-serif";
+  ctx.fillStyle = EMO_COLORS[lastEmotion] || "#888";
+  ctx.fillText(lastEmotion.toUpperCase(), W / 2, 148);
+
+  // Mode badge
+  ctx.font      = "bold 14px 'Arial', sans-serif";
+  ctx.fillStyle = mode === "roast" ? "#ff6b35" : "#8338ec";
+  ctx.fillText(mode === "roast" ? "🔥 ROASTED" : "💖 BOOSTED", W / 2, 178);
+
+  // Roast text (word wrap)
+  ctx.font      = "18px 'Arial', sans-serif";
+  ctx.fillStyle = "#f2f0ec";
+  wrapText(ctx, lastText, W / 2, 220, W - 80, 28);
+
+  // Footer
+  ctx.font      = "12px 'Arial', monospace";
+  ctx.fillStyle = "#3a3a55";
+  ctx.fillText("AI Mirror · Hinglish Roast Edition · github.com/your-repo", W / 2, H - 22);
+
+  // Download
+  const link    = document.createElement("a");
+  link.download = `roast-card-${lastEmotion}.png`;
+  link.href     = canvas.toDataURL("image/png");
+  link.click();
+
+  showToast("🃏 Roast card downloaded!");
+}
+
+function wrapText(ctx, text, x, y, maxW, lineH) {
+  const words = text.split(" ");
+  let line    = "";
+  for (let i = 0; i < words.length; i++) {
+    const test = line + words[i] + " ";
+    if (ctx.measureText(test).width > maxW && i > 0) {
+      ctx.fillText(line, x, y);
+      line = words[i] + " ";
+      y   += lineH;
+    } else {
+      line = test;
+    }
+  }
+  ctx.fillText(line, x, y);
+}
+
+/* ── HISTORY ─────────────────────────────────────────── */
+function renderHistory() {
+  const el = document.getElementById("history-list");
+  if (!history.length) {
+    el.innerHTML = '<div class="hist-empty">Abhi tak kuch nahi — face the mirror!</div>';
+    return;
+  }
+  el.innerHTML = history.slice(0, 6).map((item) => {
+    const icon  = item.mode === "roast" ? "🔥" : "💖";
+    const emoji = EMO_EMOJI[item.emotion] || "";
+    return (
+      `<div class="hist-item">` +
+      `<div class="hist-meta">${icon} ${item.mode.toUpperCase()} · ${item.emotion.toUpperCase()} ${emoji}</div>` +
+      `${item.text}` +
+      `</div>`
+    );
+  }).join("");
+}
+
+/* ── LEADERBOARD ─────────────────────────────────────── */
+function renderLeaderboard() {
+  const el = document.getElementById("leaderboard");
+  const entries = Object.entries(emotionCounts).sort((a, b) => b[1] - a[1]);
+  if (!entries.length) {
+    el.innerHTML = '<div class="hist-empty">Pehle capture karo…</div>';
+    return;
+  }
+  const max = entries[0][1];
+  el.innerHTML = entries.map(([emo, cnt], i) => {
+    const barLen = Math.round((cnt / max) * 8);
+    const bar    = "█".repeat(barLen) + "░".repeat(8 - barLen);
+    return (
+      `<div class="lb-row">` +
+      `<div class="lb-rank">${i + 1}</div>` +
+      `<div class="lb-emo">${EMO_EMOJI[emo] || ""}</div>` +
+      `<div class="lb-name">${emo.charAt(0).toUpperCase() + emo.slice(1)}</div>` +
+      `<div class="lb-bar">${bar} ${cnt}x</div>` +
+      `</div>`
+    );
+  }).join("");
+}
+
+/* ── TOAST ───────────────────────────────────────────── */
+function showToast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 2200);
+}
+
+/* ── UTILS ───────────────────────────────────────────── */
+function sleep(ms) { return new Promise((r) => setTimeout(r, ms)); }
+
+/* ── BOOT ────────────────────────────────────────────── */
+document.addEventListener("DOMContentLoaded", () => {
+  initCamera();
+  renderHistory();
+  renderLeaderboard();
+});
+</script>
+</body>
+</html>
