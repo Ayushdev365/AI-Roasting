@@ -504,15 +504,114 @@ footer p {
   font-size: .6rem; color: #1a1a2a;
   letter-spacing: .12em; text-transform: uppercase;
 }
+
+/* ── SETTINGS & MODAL ────────────────────────────────── */
+.settings-btn {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 0.5rem;
+  border-radius: 50%;
+  cursor: pointer;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+.settings-btn:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(255,255,255,0.2);
+  transform: rotate(45deg);
+}
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(10px);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1000;
+}
+.modal-card {
+  background: #0f0d1a;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  width: 90%; max-width: 450px;
+  padding: 1.5rem;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+  display: flex; flex-direction: column;
+}
+.modal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.5rem;
+}
+.close-btn {
+  background: transparent; border: none; color: #7a7a9a;
+  font-size: 1.5rem; cursor: pointer;
+}
+.close-btn:hover { color: var(--text); }
+.form-group {
+  margin-bottom: 1.2rem;
+  display: flex; flex-direction: column; gap: 0.4rem;
+}
+.form-group label {
+  font-size: 0.8rem; color: #a0a0c0; text-transform: uppercase;
+  letter-spacing: 0.05em; font-family: 'JetBrains Mono', monospace;
+}
+.form-group select, .form-group input[type="text"], .form-group input[type="password"] {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text); padding: 0.6rem;
+  outline: none; font-size: 0.9rem;
+}
+.form-group select:focus, .form-group input:focus {
+  border-color: var(--purple);
+}
+.form-group input[type="range"] {
+  width: 100%; height: 6px; background: rgba(255,255,255,0.1);
+  border-radius: 4px; outline: none; -webkit-appearance: none;
+}
+.form-group input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--purple); cursor: pointer;
+}
+.range-val {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--purple);
+  margin-left: 0.5rem;
+}
+.modal-footer {
+  margin-top: 1rem; display: flex; justify-content: flex-end;
+}
+.modal-btn {
+  padding: 0.6rem 1.2rem; border-radius: 8px; border: none;
+  cursor: pointer; font-weight: 600; font-family: inherit;
+}
+.modal-btn.save {
+  background: linear-gradient(135deg, var(--purple) 0%, var(--blue) 100%);
+  color: #fff; width: 100%;
+}
+.modal-btn.save:hover {
+  filter: brightness(1.1);
+}
 </style>
 </head>
 
 <body>
 
 <!-- HEADER -->
-<header>
+<header style="position: relative;">
   <div class="logo">🪞 AI Mirror</div>
   <div class="tagline">Hinglish Roast Edition · Emotion AI · Web Speech API · No Server Needed</div>
+  <button class="settings-btn" onclick="openSettings()" title="Settings">⚙️</button>
 </header>
 
 <!-- MAIN GRID -->
@@ -676,6 +775,71 @@ footer p {
 </footer>
 
 <div class="toast" id="toast"></div>
+
+<!-- SETTINGS MODAL -->
+<div class="modal-overlay" id="settings-modal" style="display: none;">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3 style="font-size: 1.2rem; font-weight: 700; background: linear-gradient(135deg, var(--orange) 0%, var(--pink) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">🎙️ Voice & Comedian Settings</h3>
+      <button class="close-btn" onclick="closeSettings()">&times;</button>
+    </div>
+    <div class="modal-body" style="display: flex; flex-direction: column; gap: 1rem;">
+      <div class="form-group">
+        <label>Voice Engine</label>
+        <select id="settings-voice-engine" onchange="toggleEngineFields(this.value)">
+          <option value="native">Browser Native (Free & Local)</option>
+          <option value="elevenlabs">ElevenLabs (Premium Comedian)</option>
+          <option value="openai">OpenAI (Premium Expressive)</option>
+        </select>
+      </div>
+
+      <!-- ElevenLabs settings -->
+      <div id="settings-elevenlabs-fields" style="display: none;">
+        <div class="form-group">
+          <label>ElevenLabs API Key</label>
+          <input type="password" id="settings-el-key" placeholder="Enter XI API Key" />
+        </div>
+        <div class="form-group">
+          <label>Voice ID</label>
+          <input type="text" id="settings-el-voice" value="21m00Tcm4TlvDq8ikWAM" />
+        </div>
+      </div>
+
+      <!-- OpenAI settings -->
+      <div id="settings-openai-fields" style="display: none;">
+        <div class="form-group">
+          <label>OpenAI API Key</label>
+          <input type="password" id="settings-openai-key" placeholder="Enter OpenAI API Key" />
+        </div>
+        <div class="form-group">
+          <label>Select Voice</label>
+          <select id="settings-openai-voice">
+            <option value="fable">fable (Sarcastic/Comedian)</option>
+            <option value="alloy">alloy</option>
+            <option value="echo">echo</option>
+            <option value="onyx">onyx (Deep Male)</option>
+            <option value="nova">nova</option>
+            <option value="shimmer">shimmer</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Speech Speed (Rate): <span class="range-val" id="rate-val">0.9</span></label>
+        <input type="range" id="settings-rate" min="0.5" max="2.0" step="0.1" value="0.9" oninput="document.getElementById('rate-val').innerText = this.value" />
+      </div>
+      
+      <div class="form-group">
+        <label>Voice Pitch: <span class="range-val" id="pitch-val">1.0</span></label>
+        <input type="range" id="settings-pitch" min="0.5" max="2.0" step="0.1" value="1.0" oninput="document.getElementById('pitch-val').innerText = this.value" />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="modal-btn save" onclick="saveSettings()">Save Settings</button>
+    </div>
+  </div>
+</div>
+
 
 <!-- ════════════════════════════════════════════════════════
      JAVASCRIPT
@@ -1270,10 +1434,73 @@ function updateScores() {
 const synth = window.speechSynthesis;
 let hindiVoice = null;
 
+// Settings State
+let voiceSettings = {
+  engine: 'native',
+  elKey: '',
+  elVoice: '21m00Tcm4TlvDq8ikWAM',
+  openaiKey: '',
+  openaiVoice: 'fable',
+  rate: 0.9,
+  pitch: 1.0
+};
+
+function initSettings() {
+  const saved = localStorage.getItem('voice_settings');
+  if (saved) {
+    try {
+      voiceSettings = JSON.parse(saved);
+    } catch (e) {}
+  }
+  
+  document.getElementById('settings-voice-engine').value = voiceSettings.engine || 'native';
+  document.getElementById('settings-el-key').value = voiceSettings.elKey || '';
+  document.getElementById('settings-el-voice').value = voiceSettings.elVoice || '21m00Tcm4TlvDq8ikWAM';
+  document.getElementById('settings-openai-key').value = voiceSettings.openaiKey || '';
+  document.getElementById('settings-openai-voice').value = voiceSettings.openaiVoice || 'fable';
+  document.getElementById('settings-rate').value = voiceSettings.rate || 0.9;
+  document.getElementById('rate-val').innerText = voiceSettings.rate || 0.9;
+  document.getElementById('settings-pitch').value = voiceSettings.pitch || 1.0;
+  document.getElementById('pitch-val').innerText = voiceSettings.pitch || 1.0;
+  
+  toggleEngineFields(voiceSettings.engine);
+}
+
+function toggleEngineFields(engine) {
+  document.getElementById('settings-elevenlabs-fields').style.display = engine === 'elevenlabs' ? 'block' : 'none';
+  document.getElementById('settings-openai-fields').style.display = engine === 'openai' ? 'block' : 'none';
+}
+
+function openSettings() {
+  document.getElementById('settings-modal').style.display = 'flex';
+}
+
+function closeSettings() {
+  document.getElementById('settings-modal').style.display = 'none';
+}
+
+function saveSettings() {
+  voiceSettings.engine = document.getElementById('settings-voice-engine').value;
+  voiceSettings.elKey = document.getElementById('settings-el-key').value;
+  voiceSettings.elVoice = document.getElementById('settings-el-voice').value;
+  voiceSettings.openaiKey = document.getElementById('settings-openai-key').value;
+  voiceSettings.openaiVoice = document.getElementById('settings-openai-voice').value;
+  voiceSettings.rate = parseFloat(document.getElementById('settings-rate').value);
+  voiceSettings.pitch = parseFloat(document.getElementById('settings-pitch').value);
+  
+  localStorage.setItem('voice_settings', JSON.stringify(voiceSettings));
+  closeSettings();
+  showToast("Settings saved successfully!");
+}
+
 function loadVoices() {
+  if (!synth) return;
   const voices = synth.getVoices();
-  hindiVoice   =
+  // Prioritize high quality natural/Google voices
+  hindiVoice =
+    voices.find((v) => (v.lang === "hi-IN" || v.lang.startsWith("hi")) && (v.name.includes("Google") || v.name.includes("Natural") || v.name.includes("Online"))) ||
     voices.find((v) => v.lang === "hi-IN" || v.lang.startsWith("hi")) ||
+    voices.find((v) => v.lang.startsWith("en-IN") && (v.name.includes("Natural") || v.name.includes("Online"))) ||
     voices.find((v) => v.lang.startsWith("en-IN")) ||
     null;
 }
@@ -1284,9 +1511,6 @@ if (synth) {
 }
 
 function speak(text) {
-  if (!synth) return;
-  synth.cancel();
-
   const vbar = document.getElementById("voice-bar");
   vbar.classList.add("active");
 
@@ -1295,7 +1519,82 @@ function speak(text) {
                     .replace(/[^\x00-\x7F\u0900-\u097F\s.,!?\-]/g, "")
                     .trim();
 
-  const utt   = new SpeechSynthesisUtterance(clean);
+  if (voiceSettings.engine === 'elevenlabs' && voiceSettings.elKey) {
+    const url = `https://api.elevenlabs.io/v1/text-to-speech/${voiceSettings.elVoice}`;
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'xi-api-key': voiceSettings.elKey,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        text: clean,
+        model_id: 'eleven_multilingual_v2',
+        voice_settings: {
+          stability: 0.4,
+          similarity_boost: 0.8
+        }
+      })
+    })
+    .then(res => {
+      if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+      return res.blob();
+    })
+    .then(blob => {
+      const audioUrl = URL.createObjectURL(blob);
+      const audio = new Audio(audioUrl);
+      audio.onended = () => vbar.classList.remove("active");
+      audio.onerror = () => vbar.classList.remove("active");
+      audio.play();
+    })
+    .catch(err => {
+      console.error(err);
+      vbar.classList.remove("active");
+      speakNative(clean);
+    });
+  } 
+  else if (voiceSettings.engine === 'openai' && voiceSettings.openaiKey) {
+    const url = 'https://api.openai.com/v1/audio/speech';
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${voiceSettings.openaiKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: 'tts-1',
+        input: clean,
+        voice: voiceSettings.openaiVoice
+      })
+    })
+    .then(res => {
+      if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+      return res.blob();
+    })
+    .then(blob => {
+      const audioUrl = URL.createObjectURL(blob);
+      const audio = new Audio(audioUrl);
+      audio.onended = () => vbar.classList.remove("active");
+      audio.onerror = () => vbar.classList.remove("active");
+      audio.play();
+    })
+    .catch(err => {
+      console.error(err);
+      vbar.classList.remove("active");
+      speakNative(clean);
+    });
+  } 
+  else {
+    speakNative(clean);
+  }
+}
+
+function speakNative(cleanText) {
+  if (!synth) return;
+  synth.cancel();
+
+  const vbar = document.getElementById("voice-bar");
+  const utt = new SpeechSynthesisUtterance(cleanText);
   const useHi = document.getElementById("hindi-toggle").checked;
 
   if (useHi && hindiVoice) {
@@ -1309,8 +1608,9 @@ function speak(text) {
     utt.lang = "en-IN";
   }
 
-  utt.rate   = 0.9;
-  utt.pitch  = mode === "roast" ? 0.82 : 1.12;
+  utt.rate   = voiceSettings.rate || 0.9;
+  const basePitch = voiceSettings.pitch || 1.0;
+  utt.pitch  = mode === "roast" ? (basePitch * 0.85) : (basePitch * 1.15);
   utt.volume = 1;
   utt.onend  = () => vbar.classList.remove("active");
   utt.onerror = () => vbar.classList.remove("active");
@@ -1475,6 +1775,7 @@ function sleep(ms) { return new Promise((r) => setTimeout(r, ms)); }
 
 /* ── BOOT ────────────────────────────────────────────── */
 document.addEventListener("DOMContentLoaded", () => {
+  initSettings();
   initCamera();
   renderHistory();
   renderLeaderboard();
